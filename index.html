@@ -354,23 +354,42 @@
 
     .feedback-error {
       color: #ef4444;
-      text-shadow: 0 0 35px rgba(239, 68, 68, 0.9);
-    }
+      .feedback-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: 9em;
+        font-weight: 800;
+        z-index: 60;
+        pointer-events: none;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+        opacity: 0;
+      }
 
-    .show-feedback {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-    }
+      .feedback-success {
+        color: #10b981;
+        text-shadow: 0 0 35px rgba(16, 185, 129, 0.9);
+      }
 
-    /* Game Over Modal */
+      .feedback-error {
+        color: #ef4444;
+        text-shadow: 0 0 35px rgba(239, 68, 68, 0.9);
+      }
+
+      .show-feedback {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(8px);
+      width: 100vw;
+      height: 100dvh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -378,6 +397,8 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
+      padding: 14px;
+      box-sizing: border-box;
     }
 
     .modal-overlay.active {
@@ -388,14 +409,21 @@
     .modal-card {
       background: #1e293b;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 28px;
-      padding: 45px 40px;
-      max-width: 460px;
-      width: 90%;
+      border-radius: clamp(16px, 4dvh, 28px);
+      padding: clamp(18px, 4.5dvh, 40px) clamp(20px, 5vw, 36px);
+      max-width: 440px;
+      width: min(92vw, 440px);
+      max-height: 94dvh;
+      overflow-y: auto;
       text-align: center;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
       transform: scale(0.9);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
     }
 
     .modal-overlay.active .modal-card {
@@ -403,41 +431,44 @@
     }
 
     .modal-title {
-      font-size: 2.5em;
+      font-size: clamp(1.6em, 5.5dvh, 2.4em);
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: clamp(6px, 2dvh, 12px);
       color: #ef4444;
+      line-height: 1.15;
     }
 
     .modal-subtitle {
-      font-size: 1.2em;
+      font-size: clamp(1em, 3.5dvh, 1.2em);
       color: #94a3b8;
-      margin-bottom: 28px;
+      margin-bottom: clamp(12px, 3.5dvh, 24px);
     }
 
     .modal-scores {
       background: rgba(15, 23, 42, 0.6);
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 30px;
+      border-radius: 16px;
+      padding: clamp(10px, 3dvh, 18px);
+      margin-bottom: clamp(14px, 4dvh, 26px);
       display: flex;
       justify-content: space-around;
       border: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .modal-score-item {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .modal-score-label {
-      font-size: 0.95em;
+      font-size: clamp(0.85em, 2.8dvh, 0.95em);
       color: #94a3b8;
     }
 
     .modal-score-val {
-      font-size: 2.2em;
+      font-size: clamp(1.6em, 5.5dvh, 2.2em);
       font-weight: 800;
       color: #38bdf8;
     }
@@ -446,14 +477,15 @@
       background: #38bdf8;
       color: #0f172a;
       border: none;
-      font-size: 1.35em;
+      font-size: clamp(1.15em, 4dvh, 1.35em);
       font-weight: 800;
-      padding: 16px 36px;
+      padding: clamp(12px, 3dvh, 16px) clamp(24px, 6vw, 36px);
       border-radius: 16px;
       cursor: pointer;
       width: 100%;
       transition: background 0.2s ease, transform 0.2s ease;
       box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+      flex-shrink: 0;
     }
 
     .btn-restart:hover {
@@ -461,94 +493,28 @@
       transform: translateY(-2px);
     }
 
-    /* Welcome / Explanations Modal */
+    /* Minimalist Welcome Modal */
     .welcome-card {
-      max-width: 550px;
-      padding: 35px 30px;
-      text-align: right;
+      max-width: 400px;
     }
 
     .welcome-title {
-      font-size: 2.3em;
+      font-size: clamp(1.8em, 6.5dvh, 2.6em);
       font-weight: 800;
       color: #38bdf8;
-      margin-bottom: 12px;
+      margin-bottom: clamp(10px, 3dvh, 18px);
       text-align: center;
     }
 
     .welcome-desc {
-      font-size: 1.15em;
-      color: #cbd5e1;
-      line-height: 1.5;
-      margin-bottom: 22px;
-    }
-
-    .welcome-rules {
-      background: rgba(15, 23, 42, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 18px 22px;
-      margin-bottom: 22px;
-      font-size: 1.02em;
-      color: #f8fafc;
-      line-height: 1.7;
-    }
-
-    .welcome-rules ul {
-      margin-right: 22px;
-    }
-
-    .welcome-source {
-      font-size: 0.95em;
-      color: #94a3b8;
-      margin-bottom: 25px;
+      font-size: clamp(1.1em, 4.2dvh, 1.35em);
+      color: #e2e8f0;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: clamp(18px, 5dvh, 28px);
       text-align: center;
     }
 
-    .welcome-source a {
-      color: #38bdf8;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .welcome-source a:hover {
-      text-decoration: underline;
-    }
-
-    .preloader-box {
-      margin-bottom: 22px;
-    }
-
-    .preloader-label {
-      font-size: 0.92em;
-      color: #94a3b8;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .preloader-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      height: 10px;
-      overflow: hidden;
-      width: 100%;
-    }
-
-    .preloader-fill {
-      background: #38bdf8;
-      height: 100%;
-      width: 0%;
-      transition: width 0.2s ease;
-    }
-
-    .btn-restart:disabled {
-      background: #334155 !important;
-      color: #64748b !important;
-      cursor: not-allowed;
-      transform: none !important;
-      box-shadow: none !important;
-    }
   </style>
 </head>
 <body>
@@ -589,36 +555,14 @@
   <!-- Welcome & Instructions Modal -->
   <div class="modal-overlay active" id="welcome-modal">
     <div class="modal-card welcome-card">
-      <h2 class="welcome-title">יותר או פחות? 🇮🇱</h2>
-      <p class="welcome-desc" style="text-align: center;">
-        משחק הערכת גודל האוכלוסייה בערי ישראל!
-      </p>
+      <h2 class="welcome-title">פחות או יותר</h2>
+      <p class="welcome-desc">בחר בעיר עם האוכלוסייה הגדולה יותר</p>
       
-      <div class="welcome-rules">
-        <strong>איך משחקים?</strong>
-        <ul style="margin-top: 8px;">
-          <li>בכל שלב יוצגו בפניך שתי ערים בישראל מול סמלן הרשמי.</li>
-          <li>לאחת יוצג מספר התושבים, ולשנייה יופיע סימן שאלה (<strong>???</strong>).</li>
-          <li>עליך ללחוץ על העיר שלדעתך יש בה <strong>אוכלוסייה גדולה יותר</strong>!</li>
-          <li>כל תשובה נכונה מעניקה נקודה ומחליפה עיר אחת בעיר חדשה.</li>
-        </ul>
-      </div>
+      <button class="btn-restart" id="btn-start-game" onclick="startGameFromModal()">התחל</button>
 
-      <div class="welcome-source">
-        📊 מקור הנתונים והמספרים: <a href="https://he.wikipedia.org/wiki/%D7%A2%D7%A8%D7%99%D7%9D_%D7%91%D7%99%D7%A9%D7%A8%D7%90%D7%9C" target="_blank">ערים בישראל (ויקיפדיה)</a>
+      <div style="font-size: clamp(0.82em, 2.6dvh, 0.92em); color: #64748b; margin-top: clamp(14px, 3.5dvh, 20px);">
+        מקור הנתונים: <a href="https://he.wikipedia.org/wiki/%D7%A2%D7%A8%D7%99%D7%9D_%D7%91%D7%99%D7%A9%D7%A8%D7%90%D7%9C" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600;">ערים בישראל (ויקיפדיה)</a>
       </div>
-
-      <div class="preloader-box" id="preloader-box">
-        <div class="preloader-label">
-          <span>טוען סמלי ערים למשחק חלק (גם ללא אינטרנט)...</span>
-          <span id="preload-text">0%</span>
-        </div>
-        <div class="preloader-track">
-          <div class="preloader-fill" id="preload-bar"></div>
-        </div>
-      </div>
-
-      <button class="btn-restart" id="btn-start-game" onclick="startGameFromModal()" disabled>⏳ טוען נתונים ותמונות...</button>
     </div>
   </div>
 
@@ -670,39 +614,13 @@
 
     function initGame(cities) {
       allCities = cities;
-      preloadAllImages(cities, () => {
-        const btn = document.getElementById('btn-start-game');
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = "▶ התחל במשחק!";
-          btn.style.background = "#38bdf8";
-          btn.style.color = "#0f172a";
-        }
-      });
+      preloadAllImages(cities);
     }
 
-    function preloadAllImages(cities, onComplete) {
-      let loadedCount = 0;
-      const total = cities.length;
-      const barEl = document.getElementById('preload-bar');
-      const textEl = document.getElementById('preload-text');
-
-      if (total === 0) {
-        if (onComplete) onComplete();
-        return;
-      }
-
+    function preloadAllImages(cities) {
+      if (!cities || cities.length === 0) return;
       cities.forEach(city => {
         const img = new Image();
-        img.onload = img.onerror = () => {
-          loadedCount++;
-          const pct = Math.round((loadedCount / total) * 100);
-          if (barEl) barEl.style.width = pct + '%';
-          if (textEl) textEl.textContent = `${pct}% (${loadedCount}/${total})`;
-          if (loadedCount === total && onComplete) {
-            onComplete();
-          }
-        };
         img.src = city.symbolPath;
         preloadedImages[city.symbolPath] = img;
       });
