@@ -461,6 +461,94 @@
       transform: translateY(-2px);
     }
 
+    /* Welcome / Explanations Modal */
+    .welcome-card {
+      max-width: 550px;
+      padding: 35px 30px;
+      text-align: right;
+    }
+
+    .welcome-title {
+      font-size: 2.3em;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .welcome-desc {
+      font-size: 1.15em;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .welcome-rules {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 18px 22px;
+      margin-bottom: 22px;
+      font-size: 1.02em;
+      color: #f8fafc;
+      line-height: 1.7;
+    }
+
+    .welcome-rules ul {
+      margin-right: 22px;
+    }
+
+    .welcome-source {
+      font-size: 0.95em;
+      color: #94a3b8;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .welcome-source a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .welcome-source a:hover {
+      text-decoration: underline;
+    }
+
+    .preloader-box {
+      margin-bottom: 22px;
+    }
+
+    .preloader-label {
+      font-size: 0.92em;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .preloader-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      height: 10px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .preloader-fill {
+      background: #38bdf8;
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    .btn-restart:disabled {
+      background: #334155 !important;
+      color: #64748b !important;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
   </style>
 </head>
 <body>
@@ -497,6 +585,42 @@
       <div class="feedback-icon feedback-error" id="B-error">✕</div>
     </section>
   </main>
+
+  <!-- Welcome & Instructions Modal -->
+  <div class="modal-overlay active" id="welcome-modal">
+    <div class="modal-card welcome-card">
+      <h2 class="welcome-title">יותר או פחות? 🇮🇱</h2>
+      <p class="welcome-desc" style="text-align: center;">
+        משחק הערכת גודל האוכלוסייה בערי ישראל!
+      </p>
+      
+      <div class="welcome-rules">
+        <strong>איך משחקים?</strong>
+        <ul style="margin-top: 8px;">
+          <li>בכל שלב יוצגו בפניך שתי ערים בישראל מול סמלן הרשמי.</li>
+          <li>לאחת יוצג מספר התושבים, ולשנייה יופיע סימן שאלה (<strong>???</strong>).</li>
+          <li>עליך ללחוץ על העיר שלדעתך יש בה <strong>אוכלוסייה גדולה יותר</strong>!</li>
+          <li>כל תשובה נכונה מעניקה נקודה ומחליפה עיר אחת בעיר חדשה.</li>
+        </ul>
+      </div>
+
+      <div class="welcome-source">
+        📊 מקור הנתונים והמספרים: <a href="https://he.wikipedia.org/wiki/%D7%A2%D7%A8%D7%99%D7%9D_%D7%91%D7%99%D7%A9%D7%A8%D7%90%D7%9C" target="_blank">ערים בישראל (ויקיפדיה)</a>
+      </div>
+
+      <div class="preloader-box" id="preloader-box">
+        <div class="preloader-label">
+          <span>טוען סמלי ערים למשחק חלק (גם ללא אינטרנט)...</span>
+          <span id="preload-text">0%</span>
+        </div>
+        <div class="preloader-track">
+          <div class="preloader-fill" id="preload-bar"></div>
+        </div>
+      </div>
+
+      <button class="btn-restart" id="btn-start-game" onclick="startGameFromModal()" disabled>⏳ טוען נתונים ותמונות...</button>
+    </div>
+  </div>
 
   <!-- Game Over Modal -->
   <div class="modal-overlay" id="game-over-modal">
@@ -542,8 +666,50 @@
       return arr;
     }
 
+    const preloadedImages = {}; // Cache map: symbolPath -> Image object
+
     function initGame(cities) {
       allCities = cities;
+      preloadAllImages(cities, () => {
+        const btn = document.getElementById('btn-start-game');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "▶ התחל במשחק!";
+          btn.style.background = "#38bdf8";
+          btn.style.color = "#0f172a";
+        }
+      });
+    }
+
+    function preloadAllImages(cities, onComplete) {
+      let loadedCount = 0;
+      const total = cities.length;
+      const barEl = document.getElementById('preload-bar');
+      const textEl = document.getElementById('preload-text');
+
+      if (total === 0) {
+        if (onComplete) onComplete();
+        return;
+      }
+
+      cities.forEach(city => {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          const pct = Math.round((loadedCount / total) * 100);
+          if (barEl) barEl.style.width = pct + '%';
+          if (textEl) textEl.textContent = `${pct}% (${loadedCount}/${total})`;
+          if (loadedCount === total && onComplete) {
+            onComplete();
+          }
+        };
+        img.src = city.symbolPath;
+        preloadedImages[city.symbolPath] = img;
+      });
+    }
+
+    function startGameFromModal() {
+      document.getElementById('welcome-modal').classList.remove('active');
       restartGame();
     }
 
@@ -562,7 +728,9 @@
       cityA = deck.pop();
       cityB = deck.pop();
 
-      renderRound(false);
+      renderRound(() => {
+        isTransitioning = false;
+      });
     }
 
     function getMysteryPane() {
@@ -572,22 +740,25 @@
       return turnIndex % 2 === 0 ? 'B' : 'A';
     }
 
-    function renderRound(animateFade = true) {
-      isTransitioning = false;
-      document.getElementById('pane-A').className = 'pane pane-alpha';
-      document.getElementById('pane-B').className = 'pane pane-beta';
+    function renderRound(onReady) {
+      const paneA = document.getElementById('pane-A');
+      const paneB = document.getElementById('pane-B');
+      paneA.classList.remove('winning-pane', 'losing-pane');
+      paneB.classList.remove('winning-pane', 'losing-pane');
 
       const mysteryPane = getMysteryPane(); // 'A' or 'B'
       const revealedPane = mysteryPane === 'A' ? 'B' : 'A';
 
       // Update City A DOM
       document.getElementById('A-name').textContent = cityA.name;
-      document.getElementById('A-img').src = cityA.symbolPath;
+      const imgA = document.getElementById('A-img');
+      imgA.src = cityA.symbolPath;
       document.getElementById('A-pop').textContent = cityA.population.toLocaleString();
 
       // Update City B DOM
       document.getElementById('B-name').textContent = cityB.name;
-      document.getElementById('B-img').src = cityB.symbolPath;
+      const imgB = document.getElementById('B-img');
+      imgB.src = cityB.symbolPath;
       document.getElementById('B-pop').textContent = cityB.population.toLocaleString();
 
       // Set visibility according to mystery vs revealed
@@ -601,6 +772,27 @@
         document.getElementById('A-mystery').style.display = 'none';
         document.getElementById('B-pop').style.display = 'none';
         document.getElementById('B-mystery').style.display = 'flex';
+      }
+
+      // Ensure both images are decoded and painted on GPU before removing fade-out or accepting inputs
+      const triggerReady = () => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (onReady) onReady();
+          });
+        });
+      };
+
+      if (imgA.complete && imgB.complete && imgA.naturalWidth !== 0 && imgB.naturalWidth !== 0) {
+        triggerReady();
+      } else {
+        let loaded = 0;
+        const checkDone = () => {
+          loaded++;
+          if (loaded >= 2) triggerReady();
+        };
+        if (imgA.complete && imgA.naturalWidth !== 0) checkDone(); else { imgA.onload = imgA.onerror = checkDone; }
+        if (imgB.complete && imgB.naturalWidth !== 0) checkDone(); else { imgB.onload = imgB.onerror = checkDone; }
       }
     }
 
@@ -698,9 +890,11 @@
           cityB = deck.pop();
         }
 
-        renderRound(true);
-        paneEl.classList.remove('fade-out');
-      }, 350);
+        renderRound(() => {
+          paneEl.classList.remove('fade-out');
+          isTransitioning = false;
+        });
+      }, 300);
     }
 
     function showGameOver() {
