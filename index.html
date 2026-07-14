@@ -70,7 +70,8 @@
       overflow: hidden;
     }
 
-    @media (max-width: 900px), (max-aspect-ratio: 1/1) {
+    /* Vertical Split for Portrait Orientation (phone/tablet held vertically) */
+    @media (orientation: portrait) {
       .floating-badge {
         top: 10px;
         padding: 5px 14px;
@@ -129,6 +130,65 @@
       .population-number, .mystery-badge {
         font-size: clamp(1.3em, 3.8vh, 2.3em) !important;
         padding: 4px 20px !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+      }
+    }
+
+    /* Horizontal Split adjustments for Mobile Landscape Orientation (phone rotated sideways) */
+    @media (orientation: landscape) and (max-height: 600px) {
+      .floating-badge {
+        top: 8px;
+        padding: 4px 12px;
+        font-size: 0.85em;
+      }
+
+      .badge-score {
+        right: 8px;
+      }
+
+      .badge-record {
+        left: 8px;
+      }
+
+      .playfield {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      .vs-badge {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 1em !important;
+        border-width: 2px !important;
+      }
+
+      .pane {
+        padding: 6px 10px !important;
+        border-width: 3px !important;
+        min-height: 0 !important;
+        min-width: 0 !important;
+        max-height: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .city-symbol-box {
+        max-height: 40% !important;
+        max-width: 45% !important;
+        margin: 0 !important;
+      }
+
+      .city-title {
+        font-size: clamp(1.05em, 5vh, 1.5em) !important;
+        margin: 0 !important;
+      }
+
+      .population-number, .mystery-badge {
+        font-size: clamp(1.15em, 6.5vh, 1.9em) !important;
+        padding: 4px 16px !important;
         min-height: 0 !important;
         margin: 0 !important;
       }
@@ -401,22 +461,6 @@
       transform: translateY(-2px);
     }
 
-    /* Error / File Fallback UI */
-    .error-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #1e293b;
-      border: 1px solid #f87171;
-      padding: 40px;
-      border-radius: 24px;
-      max-width: 550px;
-      width: 90%;
-      text-align: center;
-      z-index: 300;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    }
   </style>
 </head>
 <body>
@@ -682,41 +726,8 @@
         initGame(cities);
       })
       .catch(err => {
-        const playfield = document.getElementById('playfield-area');
-        playfield.innerHTML = `
-          <div class="error-container">
-            <h3 style="color: #f87171; font-size: 1.6em; margin-bottom: 15px;">⚠ לא ניתן לטעון את cities.json ישירות</h3>
-            <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 25px;">
-              כשפותחים קובץ HTML ישירות מהמחשב (<code>file://</code>), דפדפנים חוסמים טעינת קבצי JSON מטעמי אבטחה.<br>
-              כדי להתחיל לשחק מיד ללא שרת, אנא בחר/י את קובץ ה-<code>cities.json</code> מתיקייה זו:
-            </p>
-            <label for="file-picker" style="background: #38bdf8; color: #0f172a; font-weight: 800; font-size: 1.2em; padding: 14px 28px; border-radius: 14px; cursor: pointer; display: inline-block; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);">
-              📂 בחר/י את קובץ cities.json
-            </label>
-            <input type="file" id="file-picker" accept=".json" style="display: none;">
-            <div style="margin-top: 20px; font-size: 0.95em; color: #64748b;">
-              או להריץ בטרמינל: <code>bunx serve</code>
-            </div>
-          </div>
-        `;
-
-        const picker = document.getElementById('file-picker');
-        if (picker) {
-          picker.addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = ev => {
-              try {
-                const parsed = JSON.parse(ev.target.result);
-                initGame(parsed);
-              } catch (pe) {
-                alert('שגיאה בפענוח ה-JSON: ' + pe.message);
-              }
-            };
-            reader.readAsText(file);
-          });
-        }
+        console.error("שגיאה בטעינת ערים:", err);
+        alert("שגיאה בטעינת נתונים משרת GitHub Pages.");
       });
   </script>
 </body>
