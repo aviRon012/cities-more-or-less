@@ -354,33 +354,13 @@
 
     .feedback-error {
       color: #ef4444;
-      .feedback-icon {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0);
-        font-size: 9em;
-        font-weight: 800;
-        z-index: 60;
-        pointer-events: none;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
-        opacity: 0;
-      }
+      text-shadow: 0 0 35px rgba(239, 68, 68, 0.9);
+    }
 
-      .feedback-success {
-        color: #10b981;
-        text-shadow: 0 0 35px rgba(16, 185, 129, 0.9);
-      }
-
-      .feedback-error {
-        color: #ef4444;
-        text-shadow: 0 0 35px rgba(239, 68, 68, 0.9);
-      }
-
-      .show-feedback {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-      }
+    .show-feedback {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
 
     .modal-overlay {
       position: fixed;
