@@ -89,10 +89,64 @@
       position: relative;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 900px), (max-aspect-ratio: 1/1) {
+      body {
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .top-bar {
+        height: 60px;
+        padding: 0 20px;
+      }
+
       .playfield {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
+        height: 100vh;
+        min-height: 100vh;
+        padding-top: 60px;
+        overflow: hidden;
+      }
+
+      .vs-badge {
+        width: 54px;
+        height: 54px;
+        font-size: 1.15em;
+        top: calc(50% + 30px);
+        border-width: 3px;
+      }
+
+      .pane {
+        padding: 10px 15px;
+        border-width: 3px;
+      }
+
+      .pane-alpha {
+        border-left: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .city-symbol-box {
+        width: min(22vh, 140px);
+        height: min(22vh, 140px);
+        margin-bottom: 10px;
+      }
+
+      .city-title {
+        font-size: min(4vh, 2em);
+        margin-bottom: 8px;
+      }
+
+      .population-number, .mystery-badge {
+        font-size: min(5vh, 2.5em);
+        min-height: 48px;
+        padding: 6px 30px;
+        border-radius: 20px;
+      }
+
+      .feedback-icon {
+        font-size: 5.5em;
       }
     }
 
