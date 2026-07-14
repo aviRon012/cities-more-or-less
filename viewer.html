@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cities Dataset Review - Cards</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 20px;
+      background-color: #f5f7fa;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0 30px 0;
+      color: #0f172a;
+    }
+    .grid-container {
+      max-width: 1700px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 36px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.1);
+      border-color: #cbd5e1;
+    }
+    .card-top {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .rank-badge {
+      font-size: 1.15em;
+      font-weight: bold;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 8px 18px;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+    }
+    .symbol-wrapper {
+      height: 320px;
+      width: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 28px 0;
+    }
+    .symbol-img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+    .city-name {
+      font-size: 2.2em;
+      font-weight: bold;
+      margin-top: 14px;
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+    .city-population {
+      font-size: 1.45em;
+      color: #475569;
+    }
+    .error-badge {
+      color: #dc2626;
+      font-weight: bold;
+      font-size: 0.85em;
+      background: #fef2f2;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>סקירת ערי ישראל (<span id="total-count">...</span> ערים)</h1>
+
+  <div class="grid-container" id="cities-grid">
+    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">טוען ערים...</div>
+  </div>
+
+  <script>
+
+
+    function renderCities(cities) {
+      // Ensure strict descending order by population
+      cities.sort((a, b) => b.population - a.population);
+      
+      document.getElementById('total-count').textContent = cities.length;
+      const grid = document.getElementById('cities-grid');
+      grid.innerHTML = '';
+
+      cities.forEach((city) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-top">
+            <span class="rank-badge">#${city.id}</span>
+          </div>
+          <div class="symbol-wrapper">
+            <img src="${city.symbolPath}" alt="${city.name}" class="symbol-img" 
+                 onerror="this.outerHTML='<span class=\\'error-badge\\'>⚠ סמל חסר</span>'">
+          </div>
+          <div>
+            <div class="city-name">${city.name}</div>
+            <div class="city-population">${city.population.toLocaleString()} תושבים</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    fetch('cities.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Network error');
+        return response.json();
+      })
+      .then(cities => {
+        renderCities(cities);
+      })
+      .catch(err => {
+        document.getElementById('total-count').textContent = '?';
+        const grid = document.getElementById('cities-grid');
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border: 1px solid #fecaca; border-radius: 12px; color: #b91c1c;">
+            <h3 style="margin-bottom: 12px; font-size: 1.4em;">⚠ לא ניתן לטעות את cities.json ישירות</h3>
+            <p style="margin-bottom: 16px; color: #475569;">
+              כשפותחים את דף ה-HTML ישירות כקובץ מקומי (<code>file://</code>), דפדפנים חוסמים קריאות <code>fetch()</code> לקבצי JSON מטעמי אבטחה.<br>
+              כדי לטעון את הנתונים ישירות מ-<code>cities.json</code> ללא שכפולי מידע, תוכל/י לבחור אחת משתי אפשרויות:
+            </p>
+            <div style="display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 20px;">
+              <label for="json-manual-input" style="cursor: pointer; background: #0f172a; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold;">
+                📂 בחר את קובץ cities.json ידנית
+              </label>
+              <input type="file" id="json-manual-input" accept=".json" style="display: none;">
+              <span style="color: #64748b;">או להריץ בטרמינל: <code>bunx serve</code></span>
+            </div>
+          </div>
+        `;
+
+        const fileInput = document.getElementById('json-manual-input');
+        if (fileInput) {
+          fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              try {
+                const parsed = JSON.parse(event.target.result);
+                renderCities(parsed);
+              } catch (parseErr) {
+                alert('שגיאה בפענוח קובץ ה-JSON: ' + parseErr.message);
+              }
+            };
+            reader.readAsText(file);
+          });
+        }
+      });
+  </script>
+</body>
+</html>

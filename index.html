@@ -3,172 +3,667 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cities Dataset Review - Cards</title>
+  <title>בחר את העיר הגדולה יותר! - משחק אוכלוסיית ערי ישראל</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Rubik', sans-serif;
+    }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      margin: 20px;
-      background-color: #f5f7fa;
-      color: #222;
-    }
-    h1 {
-      text-align: center;
-      margin: 20px 0 30px 0;
-      color: #0f172a;
-    }
-    .grid-container {
-      max-width: 1700px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-      gap: 36px;
-    }
-    .card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 24px;
-      padding: 36px;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      background: #0f172a;
+      color: #ffffff;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      overflow-x: hidden;
+      user-select: none;
     }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.1);
-      border-color: #cbd5e1;
-    }
-    .card-top {
-      width: 100%;
+
+    /* Top Navigation & Score Bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 75px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
     }
-    .rank-badge {
-      font-size: 1.15em;
-      font-weight: bold;
-      color: #64748b;
-      background: #f1f5f9;
-      padding: 8px 18px;
-      border-radius: 24px;
-      border: 1px solid #e2e8f0;
+
+    .nav-link {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 1.1em;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s ease;
     }
-    .symbol-wrapper {
-      height: 320px;
-      width: 320px;
+
+    .nav-link:hover {
+      color: #38bdf8;
+    }
+
+    .scores-container {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .score-badge {
+      font-size: 1.25em;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 8px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .score-badge span {
+      color: #38bdf8;
+    }
+
+    .highscore-badge span {
+      color: #fbbf24;
+    }
+
+    /* Game Playfield (Split Screen) */
+    .playfield {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      padding-top: 75px;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .playfield {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+    }
+
+    /* VS Center Badge */
+    .vs-badge {
+      position: absolute;
+      top: calc(50% + 37.5px);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 76px;
+      height: 76px;
+      background: #0f172a;
+      border: 4px solid #38bdf8;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 28px 0;
+      font-weight: 800;
+      font-size: 1.5em;
+      color: #ffffff;
+      z-index: 50;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+      pointer-events: none;
     }
-    .symbol-img {
-      max-height: 100%;
+
+    /* Clickable Pane */
+    .pane {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 6px solid transparent;
+      outline: none;
+    }
+
+    .pane:hover {
+      transform: scale(1.01);
+      z-index: 10;
+    }
+
+    .pane-alpha {
+      background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pane-beta {
+      background: radial-gradient(circle at 50% 50%, #172554 0%, #0f172a 100%);
+    }
+
+    /* Winning/Losing Highlights */
+    .pane.winning-pane {
+      border-color: #10b981 !important;
+      background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.25) 0%, #0f172a 100%) !important;
+      box-shadow: inset 0 0 40px rgba(16, 185, 129, 0.3);
+    }
+
+    .pane.losing-pane {
+      border-color: #ef4444 !important;
+      background: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.25) 0%, #0f172a 100%) !important;
+      box-shadow: inset 0 0 40px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Pane Fade Out/In on replacement */
+    .pane.fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+    }
+
+    .city-symbol-box {
+      width: 300px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.4));
+      transition: transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .city-symbol-box img {
       max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
     }
-    .city-name {
+
+    .city-title {
+      font-size: 3.5em;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #f8fafc;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .population-number {
+      font-size: 4.5em;
+      font-weight: 800;
+      color: #38bdf8;
+      text-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    /* Mystery Question Badge */
+    .mystery-badge {
+      font-size: 4.5em;
+      font-weight: 800;
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      padding: 10px 50px;
+      border-radius: 28px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Feedback Overlay / Animations */
+    .feedback-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 9em;
+      font-weight: 800;
+      z-index: 60;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    .feedback-success {
+      color: #10b981;
+      text-shadow: 0 0 35px rgba(16, 185, 129, 0.9);
+    }
+
+    .feedback-error {
+      color: #ef4444;
+      text-shadow: 0 0 35px rgba(239, 68, 68, 0.9);
+    }
+
+    .show-feedback {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    /* Game Over Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px;
+      padding: 45px 40px;
+      max-width: 460px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 2.5em;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #ef4444;
+    }
+
+    .modal-subtitle {
+      font-size: 1.2em;
+      color: #94a3b8;
+      margin-bottom: 28px;
+    }
+
+    .modal-scores {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-around;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .modal-score-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .modal-score-label {
+      font-size: 0.95em;
+      color: #94a3b8;
+    }
+
+    .modal-score-val {
       font-size: 2.2em;
-      font-weight: bold;
-      margin-top: 14px;
-      margin-bottom: 8px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .btn-restart {
+      background: #38bdf8;
       color: #0f172a;
+      border: none;
+      font-size: 1.35em;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
     }
-    .city-population {
-      font-size: 1.45em;
-      color: #475569;
+
+    .btn-restart:hover {
+      background: #7dd3fc;
+      transform: translateY(-2px);
     }
-    .error-badge {
-      color: #dc2626;
-      font-weight: bold;
-      font-size: 0.85em;
-      background: #fef2f2;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid #fecaca;
+
+    /* Error / File Fallback UI */
+    .error-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e293b;
+      border: 1px solid #f87171;
+      padding: 40px;
+      border-radius: 24px;
+      max-width: 550px;
+      width: 90%;
+      text-align: center;
+      z-index: 300;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
   </style>
 </head>
 <body>
 
-  <h1>סקירת ערי ישראל (<span id="total-count">...</span> ערים)</h1>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="score-badge">ניקוד: <span id="current-score">0</span></div>
+    <div class="score-badge highscore-badge">שיא: <span id="high-score">0</span></div>
+  </header>
 
-  <div class="grid-container" id="cities-grid">
-    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">טוען ערים...</div>
+  <!-- Main Game Playfield -->
+  <main class="playfield" id="playfield-area">
+    <div class="vs-badge">VS</div>
+
+    <!-- Right Pane: Alpha (Pane A) -->
+    <section class="pane pane-alpha" id="pane-A" onclick="makeGuess('A')">
+      <div class="city-symbol-box">
+        <img id="A-img" src="" alt="">
+      </div>
+      <h2 class="city-title" id="A-name">...</h2>
+      <div class="population-number" id="A-pop">0</div>
+      <div class="mystery-badge" id="A-mystery" style="display: none;">???</div>
+      <div class="feedback-icon feedback-success" id="A-success">✓</div>
+      <div class="feedback-icon feedback-error" id="A-error">✕</div>
+    </section>
+
+    <!-- Left Pane: Beta (Pane B) -->
+    <section class="pane pane-beta" id="pane-B" onclick="makeGuess('B')">
+      <div class="city-symbol-box">
+        <img id="B-img" src="" alt="">
+      </div>
+      <h2 class="city-title" id="B-name">...</h2>
+      <div class="population-number" id="B-pop" style="display: none;">0</div>
+      <div class="mystery-badge" id="B-mystery">???</div>
+      <div class="feedback-icon feedback-success" id="B-success">✓</div>
+      <div class="feedback-icon feedback-error" id="B-error">✕</div>
+    </section>
+  </main>
+
+  <!-- Game Over Modal -->
+  <div class="modal-overlay" id="game-over-modal">
+    <div class="modal-card">
+      <h2 class="modal-title">המשחק נגמר!</h2>
+      <p class="modal-subtitle" id="modal-taunt">טעית בהערכה שלך...</p>
+      
+      <div class="modal-scores">
+        <div class="modal-score-item">
+          <span class="modal-score-label">הניקוד שלך</span>
+          <span class="modal-score-val" id="modal-score">0</span>
+        </div>
+        <div class="modal-score-item">
+          <span class="modal-score-label">שיא כל הזמנים</span>
+          <span class="modal-score-val" id="modal-highscore" style="color: #fbbf24;">0</span>
+        </div>
+      </div>
+
+      <button class="btn-restart" onclick="restartGame()">🔄 שחק שוב</button>
+    </div>
   </div>
 
   <script>
+    // Game State
+    let allCities = [];
+    let deck = [];
+    let cityA = null;
+    let cityB = null;
+    let turnIndex = 0; // 0 -> B is mystery; 1 -> A is mystery; 2 -> B is mystery...
+    let currentScore = 0;
+    let highScore = parseInt(localStorage.getItem('cities_hol_highscore') || '0', 10);
+    let isTransitioning = false;
 
+    // Display initial high score
+    document.getElementById('high-score').textContent = highScore;
 
-    function renderCities(cities) {
-      // Ensure strict descending order by population
-      cities.sort((a, b) => b.population - a.population);
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initGame(cities) {
+      allCities = cities;
+      restartGame();
+    }
+
+    function restartGame() {
+      // Hide modal & reset highlights
+      document.getElementById('game-over-modal').classList.remove('active');
+      document.getElementById('pane-A').className = 'pane pane-alpha';
+      document.getElementById('pane-B').className = 'pane pane-beta';
       
-      document.getElementById('total-count').textContent = cities.length;
-      const grid = document.getElementById('cities-grid');
-      grid.innerHTML = '';
+      currentScore = 0;
+      turnIndex = 0;
+      document.getElementById('current-score').textContent = currentScore;
+      deck = shuffleArray(allCities);
 
-      cities.forEach((city) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-top">
-            <span class="rank-badge">#${city.id}</span>
-          </div>
-          <div class="symbol-wrapper">
-            <img src="${city.symbolPath}" alt="${city.name}" class="symbol-img" 
-                 onerror="this.outerHTML='<span class=\\'error-badge\\'>⚠ סמל חסר</span>'">
-          </div>
-          <div>
-            <div class="city-name">${city.name}</div>
-            <div class="city-population">${city.population.toLocaleString()} תושבים</div>
-          </div>
-        `;
-        grid.appendChild(card);
+      // Pick first two distinct cities
+      cityA = deck.pop();
+      cityB = deck.pop();
+
+      renderRound(false);
+    }
+
+    function getMysteryPane() {
+      // Turn 0 -> B is mystery
+      // Turn 1 -> A is mystery
+      // Turn 2 -> B is mystery
+      return turnIndex % 2 === 0 ? 'B' : 'A';
+    }
+
+    function renderRound(animateFade = true) {
+      isTransitioning = false;
+      document.getElementById('pane-A').className = 'pane pane-alpha';
+      document.getElementById('pane-B').className = 'pane pane-beta';
+
+      const mysteryPane = getMysteryPane(); // 'A' or 'B'
+      const revealedPane = mysteryPane === 'A' ? 'B' : 'A';
+
+      // Update City A DOM
+      document.getElementById('A-name').textContent = cityA.name;
+      document.getElementById('A-img').src = cityA.symbolPath;
+      document.getElementById('A-pop').textContent = cityA.population.toLocaleString();
+
+      // Update City B DOM
+      document.getElementById('B-name').textContent = cityB.name;
+      document.getElementById('B-img').src = cityB.symbolPath;
+      document.getElementById('B-pop').textContent = cityB.population.toLocaleString();
+
+      // Set visibility according to mystery vs revealed
+      if (mysteryPane === 'A') {
+        document.getElementById('A-pop').style.display = 'none';
+        document.getElementById('A-mystery').style.display = 'flex';
+        document.getElementById('B-pop').style.display = 'flex';
+        document.getElementById('B-mystery').style.display = 'none';
+      } else {
+        document.getElementById('A-pop').style.display = 'flex';
+        document.getElementById('A-mystery').style.display = 'none';
+        document.getElementById('B-pop').style.display = 'none';
+        document.getElementById('B-mystery').style.display = 'flex';
+      }
+    }
+
+    function animateValue(element, start, end, duration, callback) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const currentVal = Math.floor(progress * (end - start) + start);
+        element.textContent = currentVal.toLocaleString();
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          element.textContent = end.toLocaleString();
+          if (callback) callback();
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function makeGuess(choicePane) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      const mysteryPane = getMysteryPane(); // Which pane's number was hidden
+      const mysteryCity = mysteryPane === 'A' ? cityA : cityB;
+      const mysteryPopEl = document.getElementById(mysteryPane + '-pop');
+
+      // Hide the mystery "???" badge, show the population counter
+      document.getElementById(mysteryPane + '-mystery').style.display = 'none';
+      document.getElementById(mysteryPane + '-pop').style.display = 'flex';
+
+      // Determine actual winner
+      const isAHigher = cityA.population >= cityB.population;
+      const actualWinnerPane = isAHigher ? 'A' : 'B';
+      const isCorrect = (choicePane === actualWinnerPane);
+
+      // Animate counter of the mystery pane from 0 to true population
+      animateValue(mysteryPopEl, 0, mysteryCity.population, 800, () => {
+        if (isCorrect) {
+          // Highlight winning pane
+          document.getElementById('pane-' + choicePane).classList.add('winning-pane');
+          
+          const icon = document.getElementById(choicePane + '-success');
+          icon.classList.add('show-feedback');
+          
+          currentScore++;
+          document.getElementById('current-score').textContent = currentScore;
+          if (currentScore > highScore) {
+            highScore = currentScore;
+            localStorage.setItem('cities_hol_highscore', highScore);
+            document.getElementById('high-score').textContent = highScore;
+          }
+
+          setTimeout(() => {
+            icon.classList.remove('show-feedback');
+            prepareNextRound();
+          }, 1200);
+
+        } else {
+          // Wrong guess highlights
+          document.getElementById('pane-' + choicePane).classList.add('losing-pane');
+          document.getElementById('pane-' + actualWinnerPane).classList.add('winning-pane');
+
+          const icon = document.getElementById(choicePane + '-error');
+          icon.classList.add('show-feedback');
+
+          setTimeout(() => {
+            icon.classList.remove('show-feedback');
+            showGameOver();
+          }, 1400);
+        }
       });
     }
 
+    function prepareNextRound() {
+      // Next turn index determines which pane gets replaced (`mysteryPane` of next turn)
+      turnIndex++;
+      const nextMysteryPane = getMysteryPane(); // If turn was 0 (B), now turn is 1 (A mystery, so A gets replaced)
+
+      // Ensure deck has cards
+      if (deck.length === 0) {
+        const currentKeepId = nextMysteryPane === 'A' ? cityB.id : cityA.id;
+        deck = shuffleArray(allCities.filter(c => c.id !== currentKeepId));
+      }
+
+      const paneEl = document.getElementById('pane-' + nextMysteryPane);
+      paneEl.classList.add('fade-out');
+
+      setTimeout(() => {
+        // Replace mystery pane's city with new card from deck
+        if (nextMysteryPane === 'A') {
+          cityA = deck.pop();
+        } else {
+          cityB = deck.pop();
+        }
+
+        renderRound(true);
+        paneEl.classList.remove('fade-out');
+      }, 350);
+    }
+
+    function showGameOver() {
+      document.getElementById('modal-score').textContent = currentScore;
+      document.getElementById('modal-highscore').textContent = highScore;
+      
+      const tauntEl = document.getElementById('modal-taunt');
+      if (currentScore === 0) tauntEl.textContent = "לא נורא, מתחממים! נסה שוב.";
+      else if (currentScore < 5) tauntEl.textContent = `הצלחת לצבור רצף של ${currentScore} תשובות נכונות!`;
+      else if (currentScore < 15) tauntEl.textContent = `מרשים מאוד! רצף של ${currentScore} תשובות נכונות!`;
+      else tauntEl.textContent = `אתה אלוף אמיתי בגאוגרפיה! שיא מדהים של ${currentScore}!`;
+
+      document.getElementById('game-over-modal').classList.add('active');
+    }
+
+    // Load cities.json
     fetch('cities.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Network error');
-        return response.json();
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch');
+        return res.json();
       })
       .then(cities => {
-        renderCities(cities);
+        initGame(cities);
       })
       .catch(err => {
-        document.getElementById('total-count').textContent = '?';
-        const grid = document.getElementById('cities-grid');
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border: 1px solid #fecaca; border-radius: 12px; color: #b91c1c;">
-            <h3 style="margin-bottom: 12px; font-size: 1.4em;">⚠ לא ניתן לטעות את cities.json ישירות</h3>
-            <p style="margin-bottom: 16px; color: #475569;">
-              כשפותחים את דף ה-HTML ישירות כקובץ מקומי (<code>file://</code>), דפדפנים חוסמים קריאות <code>fetch()</code> לקבצי JSON מטעמי אבטחה.<br>
-              כדי לטעון את הנתונים ישירות מ-<code>cities.json</code> ללא שכפולי מידע, תוכל/י לבחור אחת משתי אפשרויות:
+        const playfield = document.getElementById('playfield-area');
+        playfield.innerHTML = `
+          <div class="error-container">
+            <h3 style="color: #f87171; font-size: 1.6em; margin-bottom: 15px;">⚠ לא ניתן לטעון את cities.json ישירות</h3>
+            <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 25px;">
+              כשפותחים קובץ HTML ישירות מהמחשב (<code>file://</code>), דפדפנים חוסמים טעינת קבצי JSON מטעמי אבטחה.<br>
+              כדי להתחיל לשחק מיד ללא שרת, אנא בחר/י את קובץ ה-<code>cities.json</code> מתיקייה זו:
             </p>
-            <div style="display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 20px;">
-              <label for="json-manual-input" style="cursor: pointer; background: #0f172a; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold;">
-                📂 בחר את קובץ cities.json ידנית
-              </label>
-              <input type="file" id="json-manual-input" accept=".json" style="display: none;">
-              <span style="color: #64748b;">או להריץ בטרמינל: <code>bunx serve</code></span>
+            <label for="file-picker" style="background: #38bdf8; color: #0f172a; font-weight: 800; font-size: 1.2em; padding: 14px 28px; border-radius: 14px; cursor: pointer; display: inline-block; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);">
+              📂 בחר/י את קובץ cities.json
+            </label>
+            <input type="file" id="file-picker" accept=".json" style="display: none;">
+            <div style="margin-top: 20px; font-size: 0.95em; color: #64748b;">
+              או להריץ בטרמינל: <code>bunx serve</code>
             </div>
           </div>
         `;
 
-        const fileInput = document.getElementById('json-manual-input');
-        if (fileInput) {
-          fileInput.addEventListener('change', function(e) {
+        const picker = document.getElementById('file-picker');
+        if (picker) {
+          picker.addEventListener('change', e => {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = ev => {
               try {
-                const parsed = JSON.parse(event.target.result);
-                renderCities(parsed);
-              } catch (parseErr) {
-                alert('שגיאה בפענוח קובץ ה-JSON: ' + parseErr.message);
+                const parsed = JSON.parse(ev.target.result);
+                initGame(parsed);
+              } catch (pe) {
+                alert('שגיאה בפענוח ה-JSON: ' + pe.message);
               }
             };
             reader.readAsText(file);
