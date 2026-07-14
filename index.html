@@ -17,55 +17,52 @@
     body {
       background: #0f172a;
       color: #ffffff;
+      width: 100vw;
       height: 100dvh;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      max-height: 100dvh;
+      margin: 0;
+      padding: 0;
       overflow: hidden;
       user-select: none;
     }
 
-    /* Top Navigation & Score Bar */
-    .top-bar {
-      position: relative;
-      flex-shrink: 0;
-      height: 65px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 30px;
-      background: rgba(15, 23, 42, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      z-index: 100;
-    }
-
-    .scores-container {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .score-badge {
-      font-size: 1.2em;
+    /* Floating Top Corner Stat Badges */
+    .floating-badge {
+      position: absolute;
+      top: 15px;
+      z-index: 150;
+      font-size: clamp(1.05em, 2.8vmin, 1.3em);
       font-weight: 800;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 6px 18px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      padding: 8px 20px;
       border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
-    .score-badge span {
+    .badge-score {
+      right: 15px;
+    }
+
+    .badge-score span {
       color: #38bdf8;
     }
 
-    .highscore-badge span {
+    .badge-record {
+      left: 15px;
+    }
+
+    .badge-record span {
       color: #fbbf24;
     }
 
     /* Game Playfield (Split Screen) */
     .playfield {
-      flex: 1;
-      height: calc(100dvh - 65px);
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
@@ -74,32 +71,43 @@
     }
 
     @media (max-width: 900px), (max-aspect-ratio: 1/1) {
-      .top-bar {
-        height: 55px;
-        padding: 0 16px;
+      .floating-badge {
+        top: 10px;
+        padding: 5px 14px;
+        font-size: 0.95em;
       }
 
-      .score-badge {
-        font-size: 1.05em;
-        padding: 5px 14px;
+      .badge-score {
+        right: 10px;
+      }
+
+      .badge-record {
+        left: 10px;
       }
 
       .playfield {
-        height: calc(100dvh - 55px);
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
+        overflow: hidden;
       }
 
       .vs-badge {
-        width: 52px !important;
-        height: 52px !important;
+        width: 50px !important;
+        height: 50px !important;
         font-size: 1.1em !important;
         border-width: 3px !important;
       }
 
       .pane {
-        padding: 8px 12px !important;
+        padding: 10px !important;
         border-width: 4px !important;
+        min-height: 0 !important;
+        min-width: 0 !important;
+        max-height: 100% !important;
+        max-width: 100% !important;
       }
 
       .pane-alpha {
@@ -108,8 +116,21 @@
       }
 
       .city-symbol-box {
-        max-height: 44% !important;
-        max-width: 65% !important;
+        max-height: 38% !important;
+        max-width: 55% !important;
+        margin: 0 !important;
+      }
+
+      .city-title {
+        font-size: clamp(1.15em, 3vh, 1.8em) !important;
+        margin: 0 !important;
+      }
+
+      .population-number, .mystery-badge {
+        font-size: clamp(1.3em, 3.8vh, 2.3em) !important;
+        padding: 4px 20px !important;
+        min-height: 0 !important;
+        margin: 0 !important;
       }
     }
 
@@ -149,6 +170,10 @@
       outline: none;
       width: 100%;
       height: 100%;
+      min-width: 0;
+      min-height: 0;
+      max-width: 100%;
+      max-height: 100%;
       overflow: hidden;
     }
 
@@ -396,11 +421,9 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
-  <header class="top-bar">
-    <div class="score-badge">ניקוד: <span id="current-score">0</span></div>
-    <div class="score-badge highscore-badge">שיא: <span id="high-score">0</span></div>
-  </header>
+  <!-- Floating Top Corner Stats -->
+  <div class="floating-badge badge-score">ניקוד: <span id="current-score">0</span></div>
+  <div class="floating-badge badge-record">שיא: <span id="high-score">0</span></div>
 
   <!-- Main Game Playfield -->
   <main class="playfield" id="playfield-area">
