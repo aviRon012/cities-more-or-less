@@ -491,6 +491,32 @@
       transform: translateY(-2px);
     }
 
+    .btn-share {
+      background: rgba(255, 255, 255, 0.08);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-size: clamp(1.05em, 3.6dvh, 1.22em);
+      font-weight: 700;
+      padding: clamp(10px, 2.5dvh, 14px) clamp(20px, 5vw, 32px);
+      border-radius: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: clamp(10px, 2.5dvh, 14px);
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-share:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+    }
+
     /* Minimalist Welcome Modal */
     .welcome-card {
       max-width: 400px;
@@ -582,6 +608,7 @@
       </div>
 
       <button class="btn-restart" onclick="restartGame()">🔄 שחק שוב</button>
+      <button class="btn-share" id="btn-share" onclick="shareGame()">📢 שתף עם חברים</button>
     </div>
   </div>
 
@@ -824,6 +851,46 @@
       else tauntEl.textContent = `אתה אלוף אמיתי בגאוגרפיה! שיא מדהים של ${currentScore}!`;
 
       document.getElementById('game-over-modal').classList.add('active');
+    }
+
+    function shareGame() {
+      const shareData = {
+        title: "פחות או יותר 🇮🇱 - משחק אוכלוסיית ערי ישראל",
+        text: `הצלחתי לצבור רצף של ${currentScore} תשובות נכונות במשחק 'פחות או יותר'! נראה אם תצליחו לעקוף אותי מבין ערי ישראל 🏆\n`,
+        url: "https://aviron012.github.io/cities-more-or-less/"
+      };
+
+      const btn = document.getElementById('btn-share');
+      if (navigator.share) {
+        navigator.share(shareData).catch((err) => {
+          if (err.name !== 'AbortError') {
+            fallbackCopyShare(shareData, btn);
+          }
+        });
+      } else {
+        fallbackCopyShare(shareData, btn);
+      }
+    }
+
+    function fallbackCopyShare(shareData, btn) {
+      const textToCopy = `${shareData.text} ${shareData.url}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const origText = btn.innerHTML;
+          btn.innerHTML = "✓ הקישור והתוצאה הועתקו!";
+          btn.style.borderColor = "#10b981";
+          btn.style.color = "#10b981";
+          setTimeout(() => {
+            btn.innerHTML = origText;
+            btn.style.borderColor = "";
+            btn.style.color = "";
+          }, 2500);
+        }).catch(() => {
+          prompt("העתק את הקישור לשיתוף:", shareData.url);
+        });
+      } else {
+        prompt("העתק את הקישור לשיתוף:", shareData.url);
+      }
     }
 
     // Load cities.json
