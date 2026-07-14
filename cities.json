@@ -1,0 +1,500 @@
+[
+  {
+    "id": 1,
+    "name": "ירושלים",
+    "population": 1063278,
+    "symbolPath": "symbols/city_1.svg"
+  },
+  {
+    "id": 2,
+    "name": "תל אביב-יפו",
+    "population": 494787,
+    "symbolPath": "symbols/city_2.svg"
+  },
+  {
+    "id": 3,
+    "name": "חיפה",
+    "population": 294748,
+    "symbolPath": "symbols/city_3.svg"
+  },
+  {
+    "id": 4,
+    "name": "פתח תקווה",
+    "population": 270237,
+    "symbolPath": "symbols/city_4.svg"
+  },
+  {
+    "id": 5,
+    "name": "ראשון לציון",
+    "population": 260852,
+    "symbolPath": "symbols/city_5.svg"
+  },
+  {
+    "id": 6,
+    "name": "בני ברק",
+    "population": 236383,
+    "symbolPath": "symbols/city_6.svg"
+  },
+  {
+    "id": 7,
+    "name": "נתניה",
+    "population": 236252,
+    "symbolPath": "symbols/city_7.svg"
+  },
+  {
+    "id": 8,
+    "name": "אשדוד",
+    "population": 229944,
+    "symbolPath": "symbols/city_8.svg"
+  },
+  {
+    "id": 9,
+    "name": "באר שבע",
+    "population": 223688,
+    "symbolPath": "symbols/city_9.svg"
+  },
+  {
+    "id": 10,
+    "name": "חולון",
+    "population": 190762,
+    "symbolPath": "symbols/city_10.svg"
+  },
+  {
+    "id": 11,
+    "name": "בית שמש",
+    "population": 187035,
+    "symbolPath": "symbols/city_11.svg"
+  },
+  {
+    "id": 12,
+    "name": "רמת גן",
+    "population": 172693,
+    "symbolPath": "symbols/city_12.svg"
+  },
+  {
+    "id": 13,
+    "name": "אשקלון",
+    "population": 171496,
+    "symbolPath": "symbols/city_13.svg"
+  },
+  {
+    "id": 14,
+    "name": "רחובות",
+    "population": 155207,
+    "symbolPath": "symbols/city_14.svg"
+  },
+  {
+    "id": 15,
+    "name": "בת ים",
+    "population": 128573,
+    "symbolPath": "symbols/city_15.svg"
+  },
+  {
+    "id": 16,
+    "name": "הרצליה",
+    "population": 111885,
+    "symbolPath": "symbols/city_16.svg"
+  },
+  {
+    "id": 17,
+    "name": "חדרה",
+    "population": 108157,
+    "symbolPath": "symbols/city_17.png"
+  },
+  {
+    "id": 18,
+    "name": "מודיעין-מכבים-רעות",
+    "population": 102382,
+    "symbolPath": "symbols/city_18.svg"
+  },
+  {
+    "id": 19,
+    "name": "כפר סבא",
+    "population": 98927,
+    "symbolPath": "symbols/city_19.svg"
+  },
+  {
+    "id": 20,
+    "name": "לוד",
+    "population": 97161,
+    "symbolPath": "symbols/city_20.svg"
+  },
+  {
+    "id": 21,
+    "name": "מודיעין עילית",
+    "population": 91323,
+    "symbolPath": "symbols/city_21.svg"
+  },
+  {
+    "id": 22,
+    "name": "רמלה",
+    "population": 86561,
+    "symbolPath": "symbols/city_22.svg"
+  },
+  {
+    "id": 23,
+    "name": "רעננה",
+    "population": 84020,
+    "symbolPath": "symbols/city_23.svg"
+  },
+  {
+    "id": 24,
+    "name": "רהט",
+    "population": 80591,
+    "symbolPath": "symbols/city_24.svg"
+  },
+  {
+    "id": 25,
+    "name": "ראש העין",
+    "population": 80449,
+    "symbolPath": "symbols/city_25.svg"
+  },
+  {
+    "id": 26,
+    "name": "נצרת",
+    "population": 75168,
+    "symbolPath": "symbols/city_26.png"
+  },
+  {
+    "id": 27,
+    "name": "קריית גת",
+    "population": 74620,
+    "symbolPath": "symbols/city_27.svg"
+  },
+  {
+    "id": 28,
+    "name": "ביתר עילית",
+    "population": 73220,
+    "symbolPath": "symbols/city_28.svg"
+  },
+  {
+    "id": 29,
+    "name": "נהריה",
+    "population": 69284,
+    "symbolPath": "symbols/city_29.svg"
+  },
+  {
+    "id": 30,
+    "name": "עפולה",
+    "population": 68114,
+    "symbolPath": "symbols/city_30.svg"
+  },
+  {
+    "id": 31,
+    "name": "הוד השרון",
+    "population": 66593,
+    "symbolPath": "symbols/city_31.svg"
+  },
+  {
+    "id": 32,
+    "name": "קריית אתא",
+    "population": 62612,
+    "symbolPath": "symbols/city_32.svg"
+  },
+  {
+    "id": 33,
+    "name": "אום אל-פחם",
+    "population": 61025,
+    "symbolPath": "symbols/city_33.svg"
+  },
+  {
+    "id": 34,
+    "name": "נתיבות",
+    "population": 58862,
+    "symbolPath": "symbols/city_34.svg"
+  },
+  {
+    "id": 35,
+    "name": "יבנה",
+    "population": 58457,
+    "symbolPath": "symbols/city_35.svg"
+  },
+  {
+    "id": 36,
+    "name": "גבעתיים",
+    "population": 58295,
+    "symbolPath": "symbols/city_36.svg"
+  },
+  {
+    "id": 37,
+    "name": "אילת",
+    "population": 57034,
+    "symbolPath": "symbols/city_37.svg"
+  },
+  {
+    "id": 38,
+    "name": "עכו",
+    "population": 52726,
+    "symbolPath": "symbols/city_38.svg"
+  },
+  {
+    "id": 39,
+    "name": "טבריה",
+    "population": 52722,
+    "symbolPath": "symbols/city_39.svg"
+  },
+  {
+    "id": 40,
+    "name": "קריית מוצקין",
+    "population": 51359,
+    "symbolPath": "symbols/city_40.png"
+  },
+  {
+    "id": 41,
+    "name": "אלעד",
+    "population": 51207,
+    "symbolPath": "symbols/city_41.svg"
+  },
+  {
+    "id": 42,
+    "name": "רמת השרון",
+    "population": 49091,
+    "symbolPath": "symbols/city_42.svg"
+  },
+  {
+    "id": 43,
+    "name": "קריית ביאליק",
+    "population": 47783,
+    "symbolPath": "symbols/city_43.svg"
+  },
+  {
+    "id": 44,
+    "name": "כרמיאל",
+    "population": 47747,
+    "symbolPath": "symbols/city_44.svg"
+  },
+  {
+    "id": 45,
+    "name": "טייבה",
+    "population": 47378,
+    "symbolPath": "symbols/city_45.png"
+  },
+  {
+    "id": 46,
+    "name": "נס ציונה",
+    "population": 47133,
+    "symbolPath": "symbols/city_46.svg"
+  },
+  {
+    "id": 47,
+    "name": "קריית אונו",
+    "population": 46481,
+    "symbolPath": "symbols/city_47.svg"
+  },
+  {
+    "id": 48,
+    "name": "נוף הגליל",
+    "population": 46286,
+    "symbolPath": "symbols/city_48.jpg"
+  },
+  {
+    "id": 49,
+    "name": "שפרעם",
+    "population": 44207,
+    "symbolPath": "symbols/city_49.svg"
+  },
+  {
+    "id": 50,
+    "name": "חריש",
+    "population": 42684,
+    "symbolPath": "symbols/city_50.svg"
+  },
+  {
+    "id": 51,
+    "name": "אור יהודה",
+    "population": 42133,
+    "symbolPath": "symbols/city_51.svg"
+  },
+  {
+    "id": 52,
+    "name": "קריית ים",
+    "population": 42060,
+    "symbolPath": "symbols/city_52.svg"
+  },
+  {
+    "id": 53,
+    "name": "אופקים",
+    "population": 41739,
+    "symbolPath": "symbols/city_53.svg"
+  },
+  {
+    "id": 54,
+    "name": "דימונה",
+    "population": 40202,
+    "symbolPath": "symbols/city_54.svg"
+  },
+  {
+    "id": 55,
+    "name": "באר יעקב",
+    "population": 40024,
+    "symbolPath": "symbols/city_55.png"
+  },
+  {
+    "id": 56,
+    "name": "שדרות",
+    "population": 38862,
+    "symbolPath": "symbols/city_56.svg"
+  },
+  {
+    "id": 57,
+    "name": "צפת",
+    "population": 38813,
+    "symbolPath": "symbols/city_57.svg"
+  },
+  {
+    "id": 58,
+    "name": "טמרה",
+    "population": 37458,
+    "symbolPath": "symbols/city_58.png"
+  },
+  {
+    "id": 59,
+    "name": "מעלה אדומים",
+    "population": 36185,
+    "symbolPath": "symbols/city_59.svg"
+  },
+  {
+    "id": 60,
+    "name": "סח'נין",
+    "population": 34195,
+    "symbolPath": "symbols/city_60.png"
+  },
+  {
+    "id": 61,
+    "name": "טירת כרמל",
+    "population": 32475,
+    "symbolPath": "symbols/city_61.svg"
+  },
+  {
+    "id": 62,
+    "name": "יהוד-מונוסון",
+    "population": 31804,
+    "symbolPath": "symbols/city_63.svg"
+  },
+  {
+    "id": 63,
+    "name": "באקה אל-גרבייה",
+    "population": 31530,
+    "symbolPath": "symbols/city_62.svg"
+  },
+  {
+    "id": 64,
+    "name": "גבעת שמואל",
+    "population": 30409,
+    "symbolPath": "symbols/city_64.svg"
+  },
+  {
+    "id": 65,
+    "name": "ערד",
+    "population": 30246,
+    "symbolPath": "symbols/city_65.svg"
+  },
+  {
+    "id": 66,
+    "name": "כפר יונה",
+    "population": 29818,
+    "symbolPath": "symbols/city_66.jpg"
+  },
+  {
+    "id": 67,
+    "name": "קריית מלאכי",
+    "population": 29097,
+    "symbolPath": "symbols/city_67.svg"
+  },
+  {
+    "id": 68,
+    "name": "מגדל העמק",
+    "population": 28911,
+    "symbolPath": "symbols/city_68.svg"
+  },
+  {
+    "id": 69,
+    "name": "כפר קאסם",
+    "population": 28489,
+    "symbolPath": "symbols/city_69.svg"
+  },
+  {
+    "id": 70,
+    "name": "טירה",
+    "population": 28083,
+    "symbolPath": "symbols/city_70.svg"
+  },
+  {
+    "id": 71,
+    "name": "עראבה",
+    "population": 27578,
+    "symbolPath": "symbols/city_71.png"
+  },
+  {
+    "id": 72,
+    "name": "אור עקיבא",
+    "population": 26695,
+    "symbolPath": "symbols/city_72.png"
+  },
+  {
+    "id": 73,
+    "name": "גבעת זאב",
+    "population": 26601,
+    "symbolPath": "symbols/city_73.png"
+  },
+  {
+    "id": 74,
+    "name": "קלנסווה",
+    "population": 25539,
+    "symbolPath": "symbols/city_74.png"
+  },
+  {
+    "id": 75,
+    "name": "גני תקווה",
+    "population": 25534,
+    "symbolPath": "symbols/city_75.png"
+  },
+  {
+    "id": 76,
+    "name": "יקנעם עילית",
+    "population": 24858,
+    "symbolPath": "symbols/city_76.svg"
+  },
+  {
+    "id": 77,
+    "name": "מע'אר",
+    "population": 23820,
+    "symbolPath": "symbols/city_77.png"
+  },
+  {
+    "id": 78,
+    "name": "קריית שמונה",
+    "population": 23567,
+    "symbolPath": "symbols/city_78.png"
+  },
+  {
+    "id": 79,
+    "name": "מעלות-תרשיחא",
+    "population": 23121,
+    "symbolPath": "symbols/city_79.png"
+  },
+  {
+    "id": 80,
+    "name": "נשר",
+    "population": 22804,
+    "symbolPath": "symbols/city_80.svg"
+  },
+  {
+    "id": 81,
+    "name": "אריאל",
+    "population": 22383,
+    "symbolPath": "symbols/city_81.svg"
+  },
+  {
+    "id": 82,
+    "name": "כפר קרע",
+    "population": 21425,
+    "symbolPath": "symbols/city_82.jpg"
+  },
+  {
+    "id": 83,
+    "name": "בית שאן",
+    "population": 20430,
+    "symbolPath": "symbols/city_83.png"
+  }
+]
